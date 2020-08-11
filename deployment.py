@@ -53,7 +53,7 @@ def update_rule():
     for x in range(len(switch_list)):
         print("scp -i id_rsa " + file_name + " " + "priganta@" + switch_list[x])
         print("scp -i id_rsa snortrule_upload.py priganta@" + switch_list[x])
-    return True
+    return "True",200
 
 """   
 #API to create a container inside a switch.
