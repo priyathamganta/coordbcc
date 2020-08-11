@@ -50,9 +50,19 @@ def home():
 def update_rule():
     file_name = request.args['file_name']
     switch_list.append("155.98.37.73")
+    k = paramiko.RSAKey.from_private_key_file("~/id_rsa")
     for x in range(len(switch_list)):
-        os.popen("scp -i ~/id_rsa ~/" + file_name + " " + "priganta@" + switch_list[x] + ":/").read()
-        os.popen("scp -i ~/id_rsa snortrule_upload.py priganta@" + switch_list[x] + ":/").read()
+        ssh = paramiko.SSHClient() 
+        ssh.load_host_keys(os.path.expanduser(os.path.join("~", ".ssh", "known_hosts")))
+        ssh.connect(switch_list[x], username="priganta", pkey=k)
+        sftp = ssh.open_sftp()
+        localpath1 = "~/test.txt"
+        localpath2 = "./snortrule_upload.py"
+        remotepath = "~/"
+        sftp.put(localpath1, remotepath)
+        sftp.put(localpath2, remotepath)
+        sftp.close()
+        ssh.close(
     return "True",200
 
 """   
