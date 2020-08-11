@@ -11,5 +11,5 @@ file_name = sys.argv[1]
 
 for x in range(len(container_list)):
     print container_list[x],
-    command = "docker cp " + file_name + " " + container_list[x] + ":/etc/snort/rules"
-    print(command)
+    command = str("docker cp ") + str(file_name) + " " + str.rstrip(container_list[x]) + str(":/etc/snort/rules")
+    os.popen(command).read()
