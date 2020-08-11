@@ -52,8 +52,8 @@ def update_rule():
     switch_list.append("155.98.37.73")
     k = paramiko.RSAKey.from_private_key_file("/users/priganta/id_rsa")
     for x in range(len(switch_list)):
-        ssh = paramiko.SSHClient() 
-        ssh.load_host_keys(os.path.expanduser(os.path.join("~", ".ssh", "known_hosts")))
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy()) 
         ssh.connect(switch_list[x], username="priganta", pkey=k)
         sftp = ssh.open_sftp()
         localpath1 = "/users/priganta/test.txt"
