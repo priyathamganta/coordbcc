@@ -49,10 +49,13 @@ def home():
 @app.route('/api/change', methods=['GET'])
 def update_rule():
     file_name = request.args['file_name']
-    os.popen("scp -i ~/.ssh/id_rsa file_name priganta@SERVER:/etc/snort/rules").read()
-    os.popen("scp -i ~/.ssh/id_rsa snortrule_upload.py priganta@SERVER:/etc/snort/rules").read()
+    switch_list.append("155.98.37.73")
+    for x in range(len(switch_list)):
+        print("scp -i id_rsa " + file_name + " " + "priganta@" + switch_list[x])
+        print("scp -i id_rsa snortrule_upload.py priganta@" + switch_list[x])
     return True
-    
+
+"""   
 #API to create a container inside a switch.
 @app.route('/api/create', methods=['GET'])
 def runContainer():
@@ -338,4 +341,5 @@ print("No Of Rules Files: " + str(len(tarFiles)))
 
 print("App starting with Controller IP: " + controller_ip)
 
+"""
 app.run()
