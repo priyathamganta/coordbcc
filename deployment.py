@@ -51,7 +51,7 @@ def update_rule():
     file_name = request.args['file_name']
     switch_list.append("155.98.37.73")
     for x in range(len(switch_list)):
-        os.popen("scp -i ~/id_rsa " + file_name + " " + "priganta@" + switch_list[x]).read()
+        os.popen("scp -i ~/id_rsa ~/" + file_name + " " + "priganta@" + switch_list[x]).read()
         os.popen("scp -i ~/id_rsa snortrule_upload.py priganta@" + switch_list[x]).read()
     return "True",200
 
