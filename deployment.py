@@ -58,9 +58,10 @@ def update_rule():
         sftp = ssh.open_sftp()
         localpath1 = "/users/priganta/test.txt"
         localpath2 = "/users/priganta/coordbcc/snortrule_upload.py"
-        remotepath = "/users/priganta/"
-        sftp.put(localpath1, remotepath)
-        sftp.put(localpath2, remotepath)
+        remotepath1 = "/users/priganta/test.txt"
+        remotepath2 = "/users/priganta/snortrule_upload.py"
+        sftp.put(localpath1, remotepath1)
+        sftp.put(localpath2, remotepath2)
         sftp.close()
         ssh.close()
     return "True",200
