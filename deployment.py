@@ -62,7 +62,7 @@ def update_rule():
         sftp.put(localpath1, remotepath)
         sftp.put(localpath2, remotepath)
         sftp.close()
-        ssh.close(
+        ssh.close()
     return "True",200
 
 """   
