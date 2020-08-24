@@ -28,6 +28,37 @@ from ryu.lib.packet import ipv4
 from ryu.lib.packet import icmp
 from ryu.lib import snortlib
 
+import os
+import time
+import flask
+import psutil
+import urllib3
+import signal
+from flask import request, jsonify
+
+app = flask.Flask(__name__)
+app.config["DEBUG"] = True
+
+urllib3.disable_warnings()
+
+@app.route('/api/change', methods=['GET'])
+def update_rule():
+    # file_name = request.args['file_name']
+    # copy_command = "cp /usr/local/" + file_name + " /etc/snort/rules/"
+    # os.popen(copy_command).readlines()
+    rule_file = open("/etc/snort/snort.conf", "a")
+    rule_file.write("include " + file_name)
+    rule_file.close
+    PROCNAME = 'snort'
+    for proc in psutil.process_iter():
+        try:
+            if proc.name() == PROCNAME:
+                snort_process = psutil.Process(proc.pid)
+                snort_process.send_signal(signal.SIGHUP)
+        except:
+            pass
+    return "True",200
+
 
 class SimpleSwitchSnort(app_manager.RyuApp):
     OFP_VERSIONS = [ofproto_v1_3.OFP_VERSION]
@@ -38,6 +69,7 @@ class SimpleSwitchSnort(app_manager.RyuApp):
         self.snort = kwargs['snortlib']
         self.snort_port = 3
         self.mac_to_port = {}
+        app.run()
 
         socket_config = {'unixsock': False}
 
