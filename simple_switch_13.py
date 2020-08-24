@@ -40,7 +40,7 @@ urllib3.disable_warnings()
 @app.route('/api/change', methods=['GET'])
 def update_rule():
     file_name = request.args['file_name']
-    copy_command = "cp /usr/local/" + file_name + "/etc/snort/rules/"
+    copy_command = "cp /usr/local/" + file_name + " /etc/snort/rules/"
     os.popen(copy_command).readlines()
     return "True",200
 
