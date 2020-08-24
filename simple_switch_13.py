@@ -31,6 +31,7 @@ import time
 import flask
 import psutil
 import urllib3
+import signal
 from flask import request, jsonify
 
 app = flask.Flask(__name__)
@@ -48,12 +49,12 @@ def update_rule():
     rule_file.close
     PROCNAME = 'snort'
     for proc in psutil.process_iter():
-    try:
-        if proc.name() == PROCNAME:
-            snort_process = psutil.Process(proc.pid)
-            snort_process.send_signal(signal.SIGHUP)
-    except:
-        pass
+        try:
+            if proc.name() == PROCNAME:
+                snort_process = psutil.Process(proc.pid)
+                snort_process.send_signal(signal.SIGHUP)
+        except:
+            pass
     return "True",200
 
 
