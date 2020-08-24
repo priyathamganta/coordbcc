@@ -27,16 +27,9 @@ from ryu.lib.packet import in_proto
 from ryu.lib.packet import ipv4
 
 import os
-import docker
-import tarfile
 import time
-from io import BytesIO
-import paramiko
-import logging
 import flask
-import glob
 import urllib3
-import threading
 from flask import request, jsonify
 
 app = flask.Flask(__name__)
@@ -47,6 +40,8 @@ urllib3.disable_warnings()
 @app.route('/api/change', methods=['GET'])
 def update_rule():
     file_name = request.args['file_name']
+    copy_command = "cp /usr/local/" + file_name + "/etc/snort/rules/"
+    os.popen(copy_command).readlines()
     return "True",200
 
 
