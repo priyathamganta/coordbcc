@@ -29,6 +29,7 @@ from ryu.lib.packet import ipv4
 import os
 import time
 import flask
+import psutil
 import urllib3
 from flask import request, jsonify
 
@@ -40,11 +41,19 @@ urllib3.disable_warnings()
 @app.route('/api/change', methods=['GET'])
 def update_rule():
     file_name = request.args['file_name']
-    #copy_command = "cp /usr/local/" + file_name + " /etc/snort/rules/"
-    #os.popen(copy_command).readlines()
+    copy_command = "cp /usr/local/" + file_name + " /etc/snort/rules/"
+    os.popen(copy_command).readlines()
     rule_file = open("/etc/snort/snort.conf", "a")
     rule_file.write("include " + file_name)
     rule_file.close
+    PROCNAME = 'snort'
+    for proc in psutil.process_iter():
+    try:
+        if proc.name() == PROCNAME:
+            snort_process = psutil.Process(proc.pid)
+            snort_process.send_signal(signal.SIGHUP)
+    except:
+        pass
     return "True",200
 
 
