@@ -44,8 +44,8 @@ urllib3.disable_warnings()
 @app.route('/api/change', methods=['GET'])
 def update_rule():
     file_name = request.args['file_name']
-    # copy_command = "cp /usr/local/" + file_name + " /etc/snort/rules/"
-    # os.popen(copy_command).readlines()
+    copy_command = "cp /usr/local/" + file_name + " /etc/snort/rules/"
+    os.popen(copy_command).readlines()
     rule_file = open("/etc/snort/snort.conf", "a")
     rule_file.write("include " + file_name)
     rule_file.close
