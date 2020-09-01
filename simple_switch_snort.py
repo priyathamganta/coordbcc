@@ -68,7 +68,7 @@ class SimpleSwitchSnort(app_manager.RyuApp):
         super(SimpleSwitchSnort, self).__init__(*args, **kwargs)
         self.snort = kwargs['snortlib']
         self.snort_port = 1
-        self.main_switch = 172.17.74.2
+        self.main_switch = "172.17.74.2"
         self.mac_to_port = {}
         app.run()
 
@@ -162,7 +162,7 @@ class SimpleSwitchSnort(app_manager.RyuApp):
         else:
             out_port = ofproto.OFPP_FLOOD
 
-        if msg.datapath.address == self.main_switch:
+        if str(msg.datapath.address) == self.main_switch:
             actions = [parser.OFPActionOutput(out_port),
                    parser.OFPActionOutput(self.snort_port)]
             
