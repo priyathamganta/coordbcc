@@ -160,13 +160,9 @@ class SimpleSwitchSnort(app_manager.RyuApp):
         if dst in self.mac_to_port[dpid]:
             out_port = self.mac_to_port[dpid][dst]
         else:
-            out_port = ofproto.OFPP_FLOOD
-
-        print(msg.datapath.address)
-        print(self.main_switch)
+            out_port = ofproto.OFPP_FLOOD        
         
-        
-        if str(msg.datapath.address) == self.main_switch:
+        if str(msg.datapath.address[0]) == self.main_switch:
             actions = [parser.OFPActionOutput(out_port),
                    parser.OFPActionOutput(self.snort_port)]
             
