@@ -72,7 +72,7 @@ class SimpleSwitchSnort(app_manager.RyuApp):
         self.mac_to_port = {}
         #app.run()
 
-        socket_config = {'unixsock': False}
+        socket_config = {'unixsock': True}
 
         self.snort.set_config(socket_config)
         self.snort.start_socket_server()
