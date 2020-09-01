@@ -102,8 +102,8 @@ class SimpleSwitchSnort(app_manager.RyuApp):
     def _dump_alert(self, ev):
         msg = ev.msg
 
-        print('alertmsg: %s' % ''.join(msg.alertmsg))
-
+        #print('alertmsg: %s' % ''.join(msg.alertmsg))
+        print(msg.alertmsg)
         self.packet_print(msg.pkt)
 
     @set_ev_cls(ofp_event.EventOFPSwitchFeatures, CONFIG_DISPATCHER)
