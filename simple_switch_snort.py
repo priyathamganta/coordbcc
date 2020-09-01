@@ -67,7 +67,8 @@ class SimpleSwitchSnort(app_manager.RyuApp):
     def __init__(self, *args, **kwargs):
         super(SimpleSwitchSnort, self).__init__(*args, **kwargs)
         self.snort = kwargs['snortlib']
-        self.snort_port = 3
+        self.snort_port = 1
+        self.main_switch = 172.17.74.2
         self.mac_to_port = {}
         app.run()
 
@@ -161,8 +162,12 @@ class SimpleSwitchSnort(app_manager.RyuApp):
         else:
             out_port = ofproto.OFPP_FLOOD
 
-        actions = [parser.OFPActionOutput(out_port),
+        if msg.datapath.address == self.main_switch:
+            actions = [parser.OFPActionOutput(out_port),
                    parser.OFPActionOutput(self.snort_port)]
+            
+        else:
+            actions = [parser.OFPActionOutput(out_port)]
 
         # install a flow to avoid packet_in next time
         if out_port != ofproto.OFPP_FLOOD:
