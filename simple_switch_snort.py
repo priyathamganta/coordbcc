@@ -33,10 +33,10 @@ import time
 import psutil
 import signal
 import threading
+import sys
 
 
 def update_rule():
-    file_name = request.args['file_name']
     copy_command = "cp /usr/local/" + file_name + " /etc/snort/rules/"
     os.popen(copy_command).readlines()
     rule_file = open("/etc/snort/snort.conf", "a")
@@ -57,6 +57,8 @@ class SimpleSwitchSnort(app_manager.RyuApp):
     OFP_VERSIONS = [ofproto_v1_3.OFP_VERSION]
     _CONTEXTS = {'snortlib': snortlib.SnortLib}
     node_thread = threading.Thread(target=start_nodeServer)
+    node_thread.start()
+    node_thread.join()
 
     def __init__(self, *args, **kwargs):
         super(SimpleSwitchSnort, self).__init__(*args, **kwargs)
@@ -70,6 +72,11 @@ class SimpleSwitchSnort(app_manager.RyuApp):
         self.snort.set_config(socket_config)
         self.snort.start_socket_server()
 
+    def start_nodeServer(self):
+        node_start = "node app.js"
+        os.popen(node_start).readlines()
+    
+    
     def packet_print(self, pkt):
         pkt = packet.Packet(array.array('B', pkt))
 
