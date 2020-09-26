@@ -30,18 +30,11 @@ from ryu.lib import snortlib
 
 import os
 import time
-import flask
 import psutil
-import urllib3
 import signal
-from flask import request, jsonify
+import threading
 
-app = flask.Flask(__name__)
-app.config["DEBUG"] = True
 
-urllib3.disable_warnings()
-
-@app.route('/api/change', methods=['GET'])
 def update_rule():
     file_name = request.args['file_name']
     copy_command = "cp /usr/local/" + file_name + " /etc/snort/rules/"
@@ -63,6 +56,7 @@ def update_rule():
 class SimpleSwitchSnort(app_manager.RyuApp):
     OFP_VERSIONS = [ofproto_v1_3.OFP_VERSION]
     _CONTEXTS = {'snortlib': snortlib.SnortLib}
+    node_thread = threading.Thread(target=start_nodeServer)
 
     def __init__(self, *args, **kwargs):
         super(SimpleSwitchSnort, self).__init__(*args, **kwargs)
@@ -70,7 +64,6 @@ class SimpleSwitchSnort(app_manager.RyuApp):
         self.snort_port = 1
         self.main_switch = "172.17.206.2"
         self.mac_to_port = {}
-        #app.run()
 
         socket_config = {'unixsock': True}
 
