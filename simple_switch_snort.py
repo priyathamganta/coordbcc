@@ -35,6 +35,24 @@ import signal
 import threading
 import sys
 
+import socketio
+
+@sio.event
+def connect():
+    print('connection established')
+
+@sio.event
+def my_message(data):
+    print('message received with ', data)
+    sio.emit('my response', {'response': 'my response'})
+
+@sio.on('python-message')
+def on_message(data):
+    print('I received a message!'+data)    
+
+@sio.event
+def disconnect():
+    print('disconnected from server')
 
 def update_rule():
     copy_command = "cp /usr/local/" + file_name + " /etc/snort/rules/"
@@ -52,28 +70,37 @@ def update_rule():
             pass
     return "True",200
 
+def signature_make():
+    my_message("sending signature file name")
+    
+
 
 class SimpleSwitchSnort(app_manager.RyuApp):
     OFP_VERSIONS = [ofproto_v1_3.OFP_VERSION]
     _CONTEXTS = {'snortlib': snortlib.SnortLib}
-    node_thread = threading.Thread(target=start_nodeServer)
-    node_thread.start()
-    node_thread.join()
-
     def __init__(self, *args, **kwargs):
         super(SimpleSwitchSnort, self).__init__(*args, **kwargs)
         self.snort = kwargs['snortlib']
         self.snort_port = 1
         self.main_switch = "172.17.206.2"
         self.mac_to_port = {}
+        node_thread = threading.Thread(target=start_nodeServer)
+        node_thread.start()
+        node_thread.join()
 
         socket_config = {'unixsock': True}
 
         self.snort.set_config(socket_config)
         self.snort.start_socket_server()
+        sio = socketio.Client()
+        time.sleep(5)
+        sio.connect('http://localhost:3000')
+        sio.emit('python-message', {'foo': 'bar'})
+        sio.wait()
+
 
     def start_nodeServer(self):
-        node_start = "node app.js"
+        node_start = "node server.js"
         os.popen(node_start).readlines()
     
     
